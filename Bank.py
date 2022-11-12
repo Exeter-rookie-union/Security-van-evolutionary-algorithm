@@ -53,7 +53,7 @@ while i < 301:
     sum_list.append(bag_dict)
     i = i + 3
 # 存入sum_list
-print(sum_list)
+# print(sum_list)
 
 # 创建总sum_bag_list
 sum_bag_list_num = [n for n in range(1, 101)]
@@ -72,7 +72,7 @@ while j < 10:
     sum_cap = 0
     bag_list = []
     random_bag_list = []
-    while sum_cap < 285:
+    while sum_cap <= 285:
         random_bag = random.randint(0, 99)
         # print(random_weight)
         # 去除重复的取值,如果重复则重新取值
@@ -98,30 +98,31 @@ while j < 10:
     j += 1
     # print(bag_list)
     # print(sum_cap)
-# print('p_data: ',p_data)
+    # print('p_data: ',p_data)
 # print(random_weight_list)
 # print(j)
 h = 0
 round_num = 0
 while round_num < 10000:
+    # print('1111111111111111')
     # TODO 获取p_data中p的数字
     p_data_p_list = []
     p_data_num_list = []
     p_data_p_list = list(p_data.keys())
-    print('p_data_p_list',p_data_p_list)
+    # print('p_data_p_list',p_data_p_list)
     for y in p_data_p_list:
         p_data_p_num_str = y
         p_data_p_num = int(p_data_p_num_str.strip('p'))
         # print(p_data_p_num)
         p_data_num_list.append(str(p_data_p_num))
-
-
     # print(p_data_num_list)
-
+    # print('2222222222222222222')
     # p_data中随机得到1个parent
     def random_parent():
         random_bag = random.choice(p_data_num_list)
         # print(random_bag)
+        # print(p_data_num_list)
+        # print('azzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz')
         parent_list = []
         # for l in random_bag:
         # parent_dict['p' + str(l)] = p_data['p'+str(l)]
@@ -130,12 +131,12 @@ while round_num < 10000:
         # print('parent_list: ', parent_list)
         sum_fit, sum_weight, sum_value = 0, 0, 0
         # 计算当前parent的weight and value以计算fitness
+        # print(parent_list)
+        # print(len(parent_list))
         for m in parent_list:
+            # print('mmmmmmmmmmmmmmmmmmmmmmmmmmm')
             each_parent_split = m
             # print('eps: ', each_parent_split)
-            # for n in each_parent_split:
-            #     each_bag_split = n
-            # print('ebs: ',each_bag_split)
             each_bag_split_num = each_parent_split.split(' ')
             each_bag_num = each_bag_split_num[1]
             # print(each_bag_num)
@@ -145,22 +146,36 @@ while round_num < 10000:
             # print(each_bag_params)
             each_bag_weight = each_bag_params[each_parent_split]['weight']
             each_bag_value = each_bag_params[each_parent_split]['value']
+            # print('777777777777777777')
             sum_weight += float(each_bag_weight)
             sum_value += float(each_bag_value)
+            # print('888888888888888')
             # print(each_bag_weight,each_bag_value)
-        # print(sum_weight,sum_value)
+        # print('sum_weight,sum_value',sum_weight,sum_value)
         return random_bag, sum_value
 
 
     # 二元锦标赛选择parent
     def binary_tournament():
+
+        # print('qqqqqqqqqqqqqqqqq')
         random_bag_1, sum_value_1 = random_parent()
         # print(random_bag_1, sum_value_1)
         random_bag_2, sum_value_2 = random_parent()
         # print(random_bag_2, sum_value_2)
-        while random_bag_2[0] == random_bag_1[0]:
+        # print('ffffffffffffffffff')
+        # print(random_bag_1)
+        # print(random_bag_2)
+        # print('ggggggggggggggggggggg')
+        while random_bag_2 == random_bag_1:
+            # print('aaaaaaaaaaaaaaaa')
             random_bag_2, sum_value_2 = random_parent()
+            # print('ddddddddddddd')
+            # print(random_bag_2)
+            # print(random_bag_1)
+            # print('jjjjjjjjjjjjjjjjj')
         if sum_value_2 >= sum_value_1:
+            # print('ssssssssssss')
             parent = random_bag_2
         else:
             parent = random_bag_1
@@ -170,12 +185,15 @@ while round_num < 10000:
 
     # 运行两次random_parent得到两个parent: 1 & 2
     parent_a = binary_tournament()
+    # print('6666666666666666')
     parent_b = binary_tournament()
     '''去重，防止parent_a == parent_b'''
+    # print('5555555555555555')
     while parent_b == parent_a:
+        # print('99999999999999')
         parent_b = binary_tournament()
-    print('parent_a,parent_b:',parent_a,parent_b)
-
+    # print('parent_a,parent_b:',parent_a,parent_b)
+    # print('33333333333333333333')
     parent_a_list = p_data['p' + str(parent_a)]
     # print(parent_a_list)
     # print('列表长度：'+str(len(parent_a_list)))
@@ -188,20 +206,23 @@ while round_num < 10000:
     child_c = []
     child_d = []
     '''随机选取crossover部分的长度'''
-    part_length = random.sample(range(1, 10), 1)[0]
-    # print('替换长度'+str(part_length))
+    if len(parent_a_list) <= len(parent_b_list):
+        part_length = random.sample(range(1, len(parent_a_list)), 1)
+    else:
+        part_length = random.sample(range(1, len(parent_b_list)), 1)
+    print('替换长度:',part_length)
     '''随机选取crossover的起点'''
     if len(parent_a_list) <= len(parent_b_list):
-        part_start = random.sample(range(1, len(parent_a_list) - part_length), 1)
+        part_start = random.sample(range(0, len(parent_a_list) - int(part_length[0])), 1)
     else:
-        part_start = random.sample(range(1, len(parent_b_list) - part_length), 1)
+        part_start = random.sample(range(0, len(parent_b_list) - int(part_length[0])), 1)
     # print(part_start)
     '''crossover'''
-    part_a = parent_a_list[int(part_start[0]):int(part_start[0]) + int(part_length)]
-    part_b = parent_b_list[int(part_start[0]):int(part_start[0]) + int(part_length)]
+    part_a = parent_a_list[int(part_start[0]):int(part_start[0]) + int(part_length[0])]
+    part_b = parent_b_list[int(part_start[0]):int(part_start[0]) + int(part_length[0])]
     # print(part_a,part_b)
-    del parent_a_list[int(part_start[0]):int(part_start[0]) + int(part_length)]
-    del parent_b_list[int(part_start[0]):int(part_start[0]) + int(part_length)]
+    del parent_a_list[int(part_start[0]):int(part_start[0]) + int(part_length[0])]
+    del parent_b_list[int(part_start[0]):int(part_start[0]) + int(part_length[0])]
     for a in part_a:
         parent_b_list.insert(int(part_start[0]), a)
     for b in part_b:
@@ -213,7 +234,7 @@ while round_num < 10000:
     child_d_list = parent_b_list
     # print(len(child_c_list),child_c_list)
     # print(len(child_d_list),child_d_list)
-
+    # print('44444444444444444444')
     # child_c和child_d 进行变异mutation
     '''确定变异基因的个数'''
     if len(child_c_list) <= len(child_d_list):
@@ -325,7 +346,8 @@ while round_num < 10000:
         # print(p_value_e)
         # 对p_value_e排序
         p_value_e_sorted = dict_sorted(p_value_e)
-        print('p_value_e_sorted:',p_value_e_sorted)
+        final_value = p_value_e_sorted
+        # print('p_value_e_sorted:',p_value_e_sorted)
         # 再次得到最小值，并于child_f_value对比大小
         for key, value in p_value_e_sorted.items():
             p_min_value_e_sorted = (value)
@@ -345,7 +367,8 @@ while round_num < 10000:
             # print(p_value_e_f)
             # 对p_value_e排序
             p_value_e_f_sorted = dict_sorted(p_value_e_f)
-            print('p_value_e_f_sorted:',p_value_e_f_sorted)
+            final_value = p_value_e_f_sorted
+            # print('p_value_e_f_sorted:',p_value_e_f_sorted)
     else:
         if float(child_f_value) >= float(p_min_value_sorted):
             h += 1
@@ -361,7 +384,8 @@ while round_num < 10000:
             # print(p_value_f)
             # 对p_value_e排序
             p_value_f_sorted = dict_sorted(p_value_f)
-            print('p_value_f_sorted:',p_value_f_sorted)
+            final_value = p_value_f_sorted
+            # print('p_value_f_sorted:',p_value_f_sorted)
     round_num += 1
     print('round_num = ' + str(round_num))
-# TODO 将结果传给p_data,并循环10000遍
+    print(final_value)
