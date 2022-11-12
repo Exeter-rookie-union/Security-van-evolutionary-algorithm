@@ -1,6 +1,5 @@
 import pandas as pd
 import random
-import sys
 
 # 读取BankProblem.txt
 data = pd.read_table('BankProblem.txt',
