@@ -118,9 +118,9 @@ def mutation():
                 lowest_fitness = fitness(population[i])
             
     times += 1
-    if (times < gernation): mutation()
 
-mutation()
+while (time < gernation):
+        mutation()
 
 print(population)
 
